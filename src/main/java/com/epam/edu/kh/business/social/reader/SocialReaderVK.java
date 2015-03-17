@@ -77,7 +77,7 @@ public class SocialReaderVK implements SocialReader {
         return response;
     }
 
-    public final String getResponseForUpdateRecord(String sourceUrl)
+    private String getResponseForUpdateRecord(String sourceUrl)
             throws ClientProtocolException, IOException {
 
         int index = "http://vk.com/wall".length();
@@ -181,43 +181,7 @@ public class SocialReaderVK implements SocialReader {
         return newRecords;
     }
 
-    public final void getAndSaveNewRecordsByTag(String tag) {
-
-        List<Record> newRecords;
-        try {
-            newRecords = getNewRecordsByTag(tag);
-            Iterator<Record> newRecordsIt = newRecords.iterator();
-            while (newRecordsIt.hasNext()) {
-                recordService.insertRecord(newRecordsIt.next());
-            }
-        } catch (ClientProtocolException e1) {
-            System.out.println("in getAndSaveNewRecordsByTag:" + e1);
-        } catch (IOException e1) {
-            System.out.println("in getAndSaveNewRecordsByTag:" + e1);
-        }
-
-    }
-
-    public final void updatesAllRecords() {
-
-        Iterator<Record> recIt = recordService.getAllRecords().iterator();
-        Record currentrec;
-        while (recIt.hasNext()) {
-            currentrec = recIt.next();
-            try {
-                updateCurrentRecord(currentrec.getId());
-            } catch (JsonProcessingException e) {
-                System.out.println(e);
-            } catch (ClientProtocolException e) {
-                System.out.println(e);
-            } catch (IOException e) {
-                System.out.println(e);
-            }
-        }
-
-    }
-
-    public final void updateCurrentRecord(Long recordId)
+    public final Record updateRecord(Long recordId)
             throws JsonProcessingException, ClientProtocolException,
             IOException {
         Record record = recordService.getRecord(recordId);
@@ -252,7 +216,7 @@ public class SocialReaderVK implements SocialReader {
             }
             record.setMessage(message);
             record.setRecordPhotoUrl(recordPhotoUrl);
-            recordService.updateRecord(record);
+            //recordService.updateRecord(record);
         } catch (NullPointerException e) {
             System.out.println(e);
             recordService.deleteRecord(record.getId());
@@ -261,5 +225,6 @@ public class SocialReaderVK implements SocialReader {
         } catch (ClientProtocolException e) {
             System.out.println(e);
         }
+        return record;
     }
 }

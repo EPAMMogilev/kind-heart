@@ -18,7 +18,7 @@ public class ScheduledJob {
 
     @Scheduled(fixedDelay = 200000)
     public final void updateRecords() {
-        socialService.updateRecords();
+        socialService.updatesAllRecords();
     }
 
 }

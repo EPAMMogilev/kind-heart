@@ -11,6 +11,12 @@
 
 	<dependencies>
 
+		<!--<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-neo4j</artifactId>
+			<version>3.2.2.RELEASE</version>
+		</dependency>-->
+
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
@@ -138,9 +144,6 @@
 			<version>4.3.8.Final</version>
 		</dependency>
 
-		<!-- <dependency> <groupId>org.codehaus.mojo</groupId> <artifactId>findbugs-maven-plugin</artifactId> 
-			<version>3.0.0</version> </dependency> -->
-
 	</dependencies>
 
 	<build>
@@ -168,7 +171,6 @@
 				<artifactId>maven-checkstyle-plugin</artifactId>
 				<configuration>
 					<suppressionsLocation>config/checkstyle_suppressions.xml</suppressionsLocation>
-					<!--<suppressionsLocation>config/checkstyle_checks.xml</suppressionsLocation>-->
 					<violationSeverity>warning</violationSeverity>
 					<failOnViolation>true</failOnViolation>
 				</configuration>
