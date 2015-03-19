@@ -29,7 +29,7 @@ public class Record implements Serializable {
     @Column(name = "userName")
     private String userName;
 
-    @Column(name = "sourceUrl", unique = true)
+    @Column(name = "sourceUrl")
     private String sourceUrl;
 
     @Column(name = "source")
@@ -52,10 +52,22 @@ public class Record implements Serializable {
 
     @JsonManagedReference
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "tags_records",
-    joinColumns = @JoinColumn(name = "record_Id"),
-    inverseJoinColumns = @JoinColumn(name = "tag_Id"))
+    @JoinTable(name = "tags_records", joinColumns = @JoinColumn(name = "record_Id"), inverseJoinColumns = @JoinColumn(name = "tag_Id"))
     private Set<Tag> tags = new HashSet<Tag>();
+
+    public Record(long id, String userName, String sourceUrl, String source, String userProfileUrl, String userPhotoUrl, String message,
+            String recordPhotoUrl, Long dateOfCreate) {
+
+        this.id = id;
+        this.userName = userName;
+        this.sourceUrl = sourceUrl;
+        this.source = source;
+        this.userProfileUrl = userProfileUrl;
+        this.userPhotoUrl = userPhotoUrl;
+        this.message = message;
+        this.recordPhotoUrl = recordPhotoUrl;
+        this.dateOfCreate = dateOfCreate;
+    }
 
     public final Set<Tag> getTags() {
         return this.tags;
@@ -132,22 +144,9 @@ public class Record implements Serializable {
     public final void setSource(String source) {
         this.source = source;
     }
+
     public final String getSource() {
         return this.source;
-    }
-    public Record(long id, String userName, String sourceUrl, String source,
-            String userProfileUrl, String userPhotoUrl, String message,
-            String recordPhotoUrl, Long dateOfCreate) {
-
-        this.id = id;
-        this.userName = userName;
-        this.sourceUrl = sourceUrl;
-        this.source = source;
-        this.userProfileUrl = userProfileUrl;
-        this.userPhotoUrl = userPhotoUrl;
-        this.message = message;
-        this.recordPhotoUrl = recordPhotoUrl;
-        this.dateOfCreate = dateOfCreate;
     }
 
     @Override
@@ -156,16 +155,11 @@ public class Record implements Serializable {
         int result = 1;
         result = prime * result + (int) (id ^ (id >>> 32));
         result = prime * result + ((message == null) ? 0 : message.hashCode());
-        result = prime * result
-                + ((recordPhotoUrl == null) ? 0 : recordPhotoUrl.hashCode());
-        result = prime * result
-                + ((sourceUrl == null) ? 0 : sourceUrl.hashCode());
-        result = prime * result
-                + ((userName == null) ? 0 : userName.hashCode());
-        result = prime * result
-                + ((userPhotoUrl == null) ? 0 : userPhotoUrl.hashCode());
-        result = prime * result
-                + ((userProfileUrl == null) ? 0 : userProfileUrl.hashCode());
+        result = prime * result + ((recordPhotoUrl == null) ? 0 : recordPhotoUrl.hashCode());
+        result = prime * result + ((sourceUrl == null) ? 0 : sourceUrl.hashCode());
+        result = prime * result + ((userName == null) ? 0 : userName.hashCode());
+        result = prime * result + ((userPhotoUrl == null) ? 0 : userPhotoUrl.hashCode());
+        result = prime * result + ((userProfileUrl == null) ? 0 : userProfileUrl.hashCode());
         return result;
     }
 

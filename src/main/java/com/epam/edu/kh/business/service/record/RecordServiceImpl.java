@@ -1,6 +1,5 @@
 package com.epam.edu.kh.business.service.record;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -9,6 +8,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.epam.edu.kh.business.dao.record.RecordDao;
 import com.epam.edu.kh.business.dao.tag.TagDao;
@@ -27,18 +27,15 @@ public class RecordServiceImpl implements RecordService {
     @Qualifier("tagDaoImpl")
     private TagDao tagDao;
 
-    public RecordServiceImpl() {
-
-    }
-
     public final List<Record> getTopRecords() {
         List<Record> response = recordDao.getTop(20);
+        Collections.reverse(response);
         return response;
     }
 
-    public final Long getDateOfLastInsertedRecord() {
+    public final Long getDateOfLastInsertedRecord(String source) {
 
-        return recordDao.getDateOfLastInsertedRecord();
+        return recordDao.getDateOfLastInsertedRecord(source);
     }
 
     public final List<Record> getAllRecords() {
@@ -51,22 +48,29 @@ public class RecordServiceImpl implements RecordService {
         recordDao.delete(id);
     }
 
-    public final void updateRecord(Record rec) {
-        recordDao.update(rec);
+    public final void updateRecord(Record record) {
+        recordDao.update(record);
     }
 
     public final Record getRecord(Long id) {
         return recordDao.get(id);
     }
 
-    public final void insertRecord(final Record record)
-            throws IllegalArgumentException, IOException {
+    @Transactional
+    public final void insertRecord(final Record record) {
 
-        record.setTags(addTagsToRecord(record.getTags(),
-                tagDao.getFromMessage(record.getMessage())));
-        record.setMessage(cutString(160, record.getMessage()));
+        record.getTags().addAll(tagDao.getFromMessage(record.getMessage()));
+        record.setMessage(cutString(250, record.getMessage()));
         recordDao.save(record);
 
+    }
+
+    @Transactional
+    public void saveBatch(List<Record> newRecords) {
+
+        for (Record newRecord : newRecords) {
+            insertRecord(newRecord);
+        }
     }
 
     private String cutString(int i, String str) {
@@ -78,14 +82,6 @@ public class RecordServiceImpl implements RecordService {
         }
         newString = newString.concat("...");
         return newString;
-    }
-
-    private Set<Tag> addTagsToRecord(Set<Tag> recordsTags, Set<Tag> tags) {
-
-        for (Tag tag : tags) {
-            recordsTags.add(tag);
-        }
-        return recordsTags;
     }
 
     public final Set<Record> getRecordsByTagNames(TagNames tagsNames) {
@@ -142,4 +138,5 @@ public class RecordServiceImpl implements RecordService {
             }
         }
     }
+
 }
